@@ -27,6 +27,7 @@ public class Creator {
         while (true) {
             waitForUser(scanner);
             WorkOrder newWorkOrder = getWorkOrderFromUser(scanner);
+            System.out.print(".");
             createJsonFile(newWorkOrder, mapper);
         }
     }
@@ -54,14 +55,16 @@ public class Creator {
     }
 
     private WorkOrder getWorkOrderFromUser(Scanner sc) {
-        WorkOrder order = new WorkOrder();
         System.out.println("Ready to create new work order");
+        WorkOrder order = new WorkOrder();
+        order.setId(Math.abs((int) System.currentTimeMillis()));
         System.out.printf("\tWork Order - Id# %d\n", order.getId());
         System.out.println("\t------------------------");
         System.out.print("\tDescription - ");
         order.setDescription(sc.nextLine());
         System.out.print("\tName of Sender - ");
         order.setSenderName(sc.nextLine());
+        order.setStatus(Status.INITIAL);
         System.out.print("\nCreating.");
 
         return order;

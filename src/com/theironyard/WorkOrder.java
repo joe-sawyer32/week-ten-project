@@ -13,8 +13,6 @@ public class WorkOrder {
     // CONSTRUCTORS
 
     public WorkOrder() {
-        this.id = id++;
-        this.status = Status.INITIAL;
     }
 
     // METHODS
@@ -55,10 +53,12 @@ public class WorkOrder {
 
     @Override
     public String toString() {
-        return "WorkOrder - Id#" + id +
+        return "---------------------------------" +
+                "\nWorkOrder - Id#" + id +
                 "\n-------------------------------" +
                 "\nDescription - " + description +
                 "\nSender - " + senderName +
-                "\nStatus - " + status + "\n";
+                "\nStatus - " + status +
+                "\n-------------------------------\n";
     }
 }
