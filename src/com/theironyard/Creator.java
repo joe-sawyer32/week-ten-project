@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class Creator {
 
-    private String workOrderDirectory = "./work-orders/";
+    private final String WORK_ORDER_DIRECTORY = "./work-orders/";
 
     public static void main(String args[]) {
         Creator creator = new Creator();
@@ -37,7 +37,7 @@ public class Creator {
     }
 
     private void createJsonFile(WorkOrder order, ObjectMapper mapper) {
-        File filename = new File(workOrderDirectory + String.valueOf(order.getId()) + ".json");
+        File filename = new File(WORK_ORDER_DIRECTORY + String.valueOf(order.getId()) + ".json");
         System.out.print(".");
         try (FileWriter fileWriter = new FileWriter(filename)){
             String json = mapper.writeValueAsString(order);

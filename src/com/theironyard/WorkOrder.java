@@ -50,4 +50,15 @@ public class WorkOrder {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    // custom
+
+    @Override
+    public String toString() {
+        return "WorkOrder - Id#" + id +
+                "\n-------------------------------" +
+                "\nDescription - " + description +
+                "\nSender - " + senderName +
+                "\nStatus - " + status + "\n";
+    }
 }
