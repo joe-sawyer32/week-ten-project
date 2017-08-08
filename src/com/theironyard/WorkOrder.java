@@ -53,7 +53,7 @@ public class WorkOrder {
 
     @Override
     public String toString() {
-        return "\n---------------------------------" +
+        return "\n-------------------------------" +
                 "\nWorkOrder - Id#" + id +
                 "\n-------------------------------" +
                 "\nDescription - " + description +

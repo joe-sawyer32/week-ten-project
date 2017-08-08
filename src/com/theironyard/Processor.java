@@ -17,6 +17,7 @@ public class Processor {
     private final String WORK_ORDER_DIRECTORY = "./work-orders/";
     private static Map<Status, Set<WorkOrder>> workOrders = new LinkedHashMap<>();
     private static Set<Status> workFlow = new LinkedHashSet<>();
+    private final long sleepTime = 10000L;
 
 
     public static void main(String args[]) {
@@ -67,6 +68,9 @@ public class Processor {
         Set<WorkOrder> nextPile;
         switch (status) {
             case IN_PROGRESS:
+                for (WorkOrder order : pile) {
+                    order.setStatus(Status.DONE);
+                }
                 nextPile = workOrders.get(Status.DONE);
                 if(nextPile.isEmpty()) {
                     workOrders.replace(Status.DONE, pile);
@@ -76,6 +80,9 @@ public class Processor {
                 }
                 break;
             case ASSIGNED:
+                for (WorkOrder order : pile) {
+                    order.setStatus(Status.IN_PROGRESS);
+                }
                 nextPile = workOrders.get(Status.IN_PROGRESS);
                 if(nextPile.isEmpty()) {
                     workOrders.replace(Status.IN_PROGRESS, pile);
@@ -85,6 +92,9 @@ public class Processor {
                 }
                 break;
             case INITIAL:
+                for (WorkOrder order : pile) {
+                    order.setStatus(Status.ASSIGNED);
+                }
                 nextPile = workOrders.get(Status.ASSIGNED);
                 if(nextPile.isEmpty()) {
                     workOrders.replace(Status.ASSIGNED, pile);
@@ -94,6 +104,7 @@ public class Processor {
                 }
                 break;
         }
+        workOrders.replace(status, EMPTY_SET);
     }
 
     private void readWorkOrders() {
@@ -110,7 +121,7 @@ public class Processor {
                     WorkOrder newWorkOrder = convertJsonFileToObject(f, mapper);
                     // f.delete(); will delete the file
                     f.delete();
-                    System.out.println("Found new work order:\n");
+                    System.out.println("Found new work order:");
                     System.out.println(newWorkOrder);
                     initialWorkOrders.add(newWorkOrder);
                 }
@@ -137,7 +148,7 @@ public class Processor {
 
     private void sleep() {
         try {
-            Thread.sleep(15000L);
+            Thread.sleep(sleepTime);
         } catch (InterruptedException ex) {
             System.out.println("Couldn't fall asleep....");
             ex.printStackTrace();
