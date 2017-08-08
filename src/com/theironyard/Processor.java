@@ -65,44 +65,16 @@ public class Processor {
     }
 
     private void moveToNextPile(Set<WorkOrder> pile, Status status) {
-        Set<WorkOrder> nextPile;
-        switch (status) {
-            case IN_PROGRESS:
-                for (WorkOrder order : pile) {
-                    order.setStatus(Status.DONE);
-                }
-                nextPile = workOrders.get(Status.DONE);
-                if(nextPile.isEmpty()) {
-                    workOrders.replace(Status.DONE, pile);
-                } else {
-                    nextPile.addAll(pile);
-                    workOrders.replace(Status.DONE, nextPile);
-                }
-                break;
-            case ASSIGNED:
-                for (WorkOrder order : pile) {
-                    order.setStatus(Status.IN_PROGRESS);
-                }
-                nextPile = workOrders.get(Status.IN_PROGRESS);
-                if(nextPile.isEmpty()) {
-                    workOrders.replace(Status.IN_PROGRESS, pile);
-                } else {
-                    nextPile.addAll(pile);
-                    workOrders.replace(Status.IN_PROGRESS, nextPile);
-                }
-                break;
-            case INITIAL:
-                for (WorkOrder order : pile) {
-                    order.setStatus(Status.ASSIGNED);
-                }
-                nextPile = workOrders.get(Status.ASSIGNED);
-                if(nextPile.isEmpty()) {
-                    workOrders.replace(Status.ASSIGNED, pile);
-                } else {
-                    nextPile.addAll(pile);
-                    workOrders.replace(Status.ASSIGNED, nextPile);
-                }
-                break;
+        Status nextStatus = status.next();
+        for (WorkOrder order : pile) {
+            order.setStatus(nextStatus);
+        }
+        Set<WorkOrder> nextPile = workOrders.get(nextStatus);
+        if(nextPile.isEmpty()) {
+            workOrders.replace(nextStatus, pile);
+        } else {
+            nextPile.addAll(pile);
+            workOrders.replace(nextStatus, nextPile);
         }
         workOrders.replace(status, EMPTY_SET);
     }
