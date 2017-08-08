@@ -16,36 +16,83 @@ public class Processor {
 
     private final String WORK_ORDER_DIRECTORY = "./work-orders/";
     private static Map<Status, Set<WorkOrder>> workOrders = new LinkedHashMap<>();
+    private static Set<Status> workFlow = new LinkedHashSet<>();
 
+
+    public static void main(String args[]) {
+        initializeMapAndWorkFlow();
+        Processor processor = new Processor();
+        processor.processWorkOrders();
+    }
+
+    private static void initializeMapAndWorkFlow() {
+        workOrders.put(Status.INITIAL, EMPTY_SET);
+        workOrders.put(Status.ASSIGNED, EMPTY_SET);
+        workOrders.put(Status.IN_PROGRESS, EMPTY_SET);
+        workOrders.put(Status.DONE, EMPTY_SET);
+
+        workFlow.add(Status.IN_PROGRESS);
+        workFlow.add(Status.ASSIGNED);
+        workFlow.add(Status.INITIAL);
+    }
 
     public void processWorkOrders() {
         while (true) {
+            printWorkOrders();
             moveWorkOrders();
+            printWorkOrders();
             readWorkOrders();
             sleep();
         }
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(15000L);
-        } catch (InterruptedException ex) {
-            System.out.println("Couldn't fall asleep....");
-            ex.printStackTrace();
+    private void printWorkOrders() {
+        System.out.println("Current work orders:");
+        for (Status status : workOrders.keySet()) {
+            System.out.println(status);
+            System.out.println(workOrders.get(status));
         }
     }
 
     private void moveWorkOrders() {
         // move work orders in map from one state to another
-        System.out.println("Current work orders:");
-        print(workOrders);
         System.out.println("Moving work orders...");
+        for (Status status : workFlow) {
+            Set<WorkOrder> pile = workOrders.get(status);
+            moveToNextPile(pile, status);
+        }
     }
 
-    private void print(Map<Status, Set<WorkOrder>> map) {
-        for (Status status : map.keySet()) {
-            System.out.println(status);
-            System.out.println(map.get(status));
+    private void moveToNextPile(Set<WorkOrder> pile, Status status) {
+        Set<WorkOrder> nextPile;
+        switch (status) {
+            case IN_PROGRESS:
+                nextPile = workOrders.get(Status.DONE);
+                if(nextPile.isEmpty()) {
+                    workOrders.replace(Status.DONE, pile);
+                } else {
+                    nextPile.addAll(pile);
+                    workOrders.replace(Status.DONE, nextPile);
+                }
+                break;
+            case ASSIGNED:
+                nextPile = workOrders.get(Status.IN_PROGRESS);
+                if(nextPile.isEmpty()) {
+                    workOrders.replace(Status.IN_PROGRESS, pile);
+                } else {
+                    nextPile.addAll(pile);
+                    workOrders.replace(Status.IN_PROGRESS, nextPile);
+                }
+                break;
+            case INITIAL:
+                nextPile = workOrders.get(Status.ASSIGNED);
+                if(nextPile.isEmpty()) {
+                    workOrders.replace(Status.ASSIGNED, pile);
+                } else {
+                    nextPile.addAll(pile);
+                    workOrders.replace(Status.ASSIGNED, nextPile);
+                }
+                break;
         }
     }
 
@@ -88,16 +135,12 @@ public class Processor {
         return wo;
     }
 
-    public static void main(String args[]) {
-        initializeMap();
-        Processor processor = new Processor();
-        processor.processWorkOrders();
-    }
-
-    private static void initializeMap() {
-        workOrders.put(Status.INITIAL, EMPTY_SET);
-        workOrders.put(Status.ASSIGNED, EMPTY_SET);
-        workOrders.put(Status.IN_PROGRESS, EMPTY_SET);
-        workOrders.put(Status.DONE, EMPTY_SET);
+    private void sleep() {
+        try {
+            Thread.sleep(15000L);
+        } catch (InterruptedException ex) {
+            System.out.println("Couldn't fall asleep....");
+            ex.printStackTrace();
+        }
     }
 }
