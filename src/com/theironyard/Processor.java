@@ -17,7 +17,7 @@ public class Processor {
     private final String WORK_ORDER_DIRECTORY = "./work-orders/";
     private static Map<Status, Set<WorkOrder>> workOrders = new LinkedHashMap<>();
     private static Set<Status> workFlow = new LinkedHashSet<>();
-    private final long sleepTime = 10000L;
+    private final long SLEEP_TIME = 10000L;
 
 
     public static void main(String args[]) {
@@ -120,7 +120,7 @@ public class Processor {
 
     private void sleep() {
         try {
-            Thread.sleep(sleepTime);
+            Thread.sleep(SLEEP_TIME);
         } catch (InterruptedException ex) {
             System.out.println("Couldn't fall asleep....");
             ex.printStackTrace();
