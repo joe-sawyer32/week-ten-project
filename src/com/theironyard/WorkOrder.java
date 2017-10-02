@@ -11,7 +11,6 @@ public class WorkOrder {
     private Status status;
 
     // CONSTRUCTORS
-
     public WorkOrder() {
     }
 
