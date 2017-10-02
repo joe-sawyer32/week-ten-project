@@ -6,30 +6,29 @@
  pile (when the person it was assigned to actually starts working on it.). And lastly it moves to the DONE pile (when
  the work is done).
 
-Getting Started
+Getting Started:
 
 Open up a new project in IntelliJ.
 
 Import the jackson library to convert java to/from JSON.
 
 Create a Status enum with the following values:
-
-INITIAL
-ASSIGNED
-IN_PROGRESS
-DONE
+INITIAL,
+ASSIGNED,
+IN_PROGRESS,
+DONE.
 
 Create a WorkOrder class with the following fields:
-
-id (int)
-description (String)
-senderName (String)
-status (Status)
+id (int),
+description (String),
+senderName (String),
+status (Status).
 
 Create a class named "Creator" to create work orders. In Creator have a public static void main that creates an
 instance of Creator and calls the instance method that loops to get the user input and create work order files:
 
-public class Creator {
+  public class Creator {
+  
     public void createWorkOrders() {
         // read input, create work orders and write as json files
     }
@@ -38,14 +37,15 @@ public class Creator {
         Creator creator = new Creator();
         creator.createWorkOrders();
     }
-}
+  }
 
 Set an id when the work order is created. Persist the work order to a file in JSON with the id as the file name.
 
 Create a class "Processor" to process the work orders. In Processor have a public static void main that creates an
 instance of Processor and calls the instance method to that loops to process the work order files:
 
-public class Processor {
+  public class Processor {
+  
     public void processWorkOrders() {
         moveIt();
         readIt();
@@ -63,7 +63,7 @@ public class Processor {
         Processor processor = new Processor();
         processor.processWorkOrders();
     }
-}
+  }
 
 The processWorkOrders method should:
 
